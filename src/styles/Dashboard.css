@@ -5,20 +5,57 @@
   overflow: hidden;
   animation: fadeIn 0.5s ease;
 }
-
+ 
+/* Container for both dropdowns */
 .dashboard-header {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
+  padding: 1rem 0;
 }
-
+ 
+/* Shared style for dropdown wrappers */
+.category-filter,
+.sort-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+ 
+/* Style the select boxes */
+.category-filter select,
+.sort-dropdown select {
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  transition: border-color 0.2s;
+}
+ 
+.category-filter select:focus,
+.sort-dropdown select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+ 
+/* Optional: Make labels a bit bold for clarity */
+.category-filter label,
+.sort-dropdown label {
+  font-weight: 500;
+}
+ 
+ 
 .tab-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   justify-content: center;
 }
-
+ 
 .tab-buttons button {
   padding: 10px 20px;
   background-color: #f1f3f5;
@@ -30,28 +67,28 @@
   transition: var(--transition);
   color: var(--text-color);
 }
-
+ 
 .tab-buttons button:hover {
   background-color: #e9ecef;
   transform: translateY(-2px);
 }
-
+ 
 .tab-buttons button.active {
   background-color: var(--primary-color);
   color: white;
   box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
 }
-
+ 
 .dashboard-content {
   display: flex;
   padding: 25px;
 }
-
+ 
 .main-content {
   flex: 1;
   margin-right: 25px;
 }
-
+ 
 .main-content h2 {
   margin-top: 0;
   margin-bottom: 30px;
@@ -60,7 +97,7 @@
   position: relative;
   padding-bottom: 10px;
 }
-
+ 
 .main-content h2::after {
   content: '';
   position: absolute;
@@ -71,11 +108,11 @@
   background-color: var(--primary-color);
   border-radius: 2px;
 }
-
+ 
 .sidebar {
   width: 320px;
 }
-
+ 
 .popular-courses-widget,
 .statistics-widget {
   background-color: #f8f9fa;
@@ -84,7 +121,7 @@
   margin-bottom: 25px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
-
+ 
 .popular-courses-widget h3,
 .statistics-widget h3 {
   margin-top: 0;
@@ -95,7 +132,7 @@
   position: relative;
   padding-bottom: 10px;
 }
-
+ 
 .popular-courses-widget h3::after,
 .statistics-widget h3::after {
   content: '';
@@ -107,15 +144,15 @@
   background-color: var(--accent-color);
   border-radius: 2px;
 }
-
+ 
 .popular-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
+ 
 /* Update voor de Dashboard.css - focus op popular-item styling */
-
+ 
 .popular-item {
   display: flex;
   justify-content: space-between;
@@ -124,11 +161,11 @@
   border-bottom: 1px solid #e9ecef;
   gap: 15px;
 }
-
+ 
 .popular-item:last-child {
   border-bottom: none;
 }
-
+ 
 .popular-title {
   font-weight: 500;
   color: var(--text-color);
@@ -136,7 +173,7 @@
   word-wrap: break-word;
   flex: 1;
 }
-
+ 
 .popular-views {
   color: var(--text-light);
   font-size: 14px;
@@ -145,13 +182,13 @@
   min-width: 85px;
   text-align: right;
 }
-
+ 
 .stats-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 15px;
 }
-
+ 
 .stat-item {
   text-align: center;
   padding: 15px 10px;
@@ -161,12 +198,12 @@
   transition: var(--transition);
   min-width: 0;
 }
-
+ 
 .stat-item:hover {
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
-
+ 
 .stat-label {
   display: block;
   font-size: 13px;
@@ -176,56 +213,43 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
-
+ 
 .stat-value {
   display: block;
   font-weight: 600;
   font-size: 18px;
   color: var(--primary-color);
 }
-
+ 
 @media (max-width: 900px) {
   .dashboard-content {
     flex-direction: column;
   }
-
+ 
   .main-content {
     margin-right: 0;
     margin-bottom: 25px;
   }
-
+ 
   .sidebar {
     width: 100%;
   }
-
+ 
   .stats-container {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
+ 
 @media (max-width: 500px) {
   .tab-buttons {
     flex-direction: column;
   }
-
+ 
   .tab-buttons button {
     width: 100%;
   }
-
+ 
   .stats-container {
     grid-template-columns: 1fr;
   }
-}
-
-.sort-dropdown {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.sort-dropdown select {
-  padding: 0.4rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
 }

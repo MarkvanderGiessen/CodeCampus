@@ -3,7 +3,7 @@
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 25px;
 }
-
+ 
 .course-card {
   background-color: var(--card-bg);
   border-radius: var(--border-radius);
@@ -15,19 +15,19 @@
   flex-direction: column;
   height: 100%;
 }
-
+ 
 .course-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
 }
-
+ 
 .course-image {
   height: 180px;
   overflow: hidden;
   position: relative;
   margin: 0;
 }
-
+ 
 .course-image::after {
   content: '';
   position: absolute;
@@ -37,25 +37,25 @@
   height: 50%;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
 }
-
+ 
 .course-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
-
+ 
 .course-card:hover .course-image img {
   transform: scale(1.05);
 }
-
+ 
 .course-content {
   padding: 20px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
-
+ 
 .course-card h3 {
   margin-top: 0;
   margin-bottom: 15px;
@@ -64,7 +64,7 @@
   font-weight: 600;
   line-height: 1.4;
 }
-
+ 
 .course-description {
   color: var(--text-light);
   font-size: 14px;
@@ -72,18 +72,18 @@
   line-height: 1.5;
   flex-grow: 1;
 }
-
+ 
 .course-details {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
   gap: 10px;
 }
-
+ 
 .course-details > div {
   flex: 1;
 }
-
+ 
 .level,
 .duration {
   font-size: 13px;
@@ -94,7 +94,7 @@
   display: inline-block;
   font-weight: 500;
 }
-
+ 
 .course-stats {
   display: flex;
   justify-content: space-between;
@@ -103,23 +103,23 @@
   border-top: 1px solid #f1f3f5;
   font-size: 13px;
 }
-
+ 
 .members,
 .views {
   color: var(--text-light);
   font-weight: 500;
 }
-
+ 
 .rating {
   color: var(--accent-color);
   font-weight: 600;
 }
-
+ 
 .course-actions {
   text-align: center;
   margin-top: auto;
 }
-
+ 
 .course-button {
   width: 100%;
   padding: 12px 0;
@@ -132,13 +132,13 @@
   font-weight: 500;
   transition: var(--transition);
 }
-
+ 
 .course-button:hover {
   background-color: var(--primary-dark);
   transform: translateY(-2px);
   box-shadow: 0 5px 10px rgba(52, 152, 219, 0.2);
 }
-
+ 
 .empty-list {
   padding: 40px;
   text-align: center;
@@ -147,23 +147,11 @@
   color: var(--text-light);
   font-size: 16px;
 }
-
-@media (max-width: 768px) {
-  .course-list {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  }
-}
-
-@media (max-width: 500px) {
-  .course-list {
-    grid-template-columns: 1fr;
-  }
-
-  .course-image {
-    height: 160px;
-  }
-}
-
+ 
+/* ========================== */
+/* Modal Styling Enhancements */
+/* ========================== */
+ 
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -173,7 +161,7 @@
   justify-content: center;
   z-index: 999;
 }
-
+ 
 .modal {
   background: white;
   padding: 2rem;
@@ -182,8 +170,10 @@
   max-width: 600px;
   position: relative;
   animation: fadeIn 0.3s ease-in-out;
+  max-height: 90vh;
+  overflow-y: auto;
 }
-
+ 
 .modal-close {
   position: absolute;
   top: 1rem;
@@ -194,29 +184,54 @@
   cursor: pointer;
   color: #888;
 }
-
+ 
+.modal-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+ 
 .modal-description {
   margin: 1rem 0;
   color: #444;
 }
-
+ 
+.modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 14px;
+}
+ 
+.modal-info span {
+  background: #f1f3f5;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+ 
 .modal-objectives {
   padding-left: 1.5rem;
   list-style: disc;
   margin-bottom: 1.5rem;
   color: #333;
 }
-
+ 
 .modal-actions {
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
 }
-
+ 
 .course-button.secondary {
   background-color: #eee;
   color: #333;
 }
-
+ 
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -225,5 +240,37 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+ 
+/* ========================== */
+/* Responsive Tweaks          */
+/* ========================== */
+ 
+@media (max-width: 768px) {
+  .course-list {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+ 
+  .modal {
+    padding: 1.5rem;
+  }
+ 
+  .modal-image {
+    height: 160px;
+  }
+}
+ 
+@media (max-width: 500px) {
+  .course-list {
+    grid-template-columns: 1fr;
+  }
+ 
+  .course-image {
+    height: 160px;
+  }
+ 
+  .modal-actions {
+    flex-direction: column;
   }
 }
