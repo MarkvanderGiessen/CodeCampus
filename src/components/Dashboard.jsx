@@ -6,34 +6,55 @@ import Statistics from './Statistics';
 import SearchBar from './SearchBar';
  
 const Dashboard = ({ courseData }) => {
-  const [activeTab, setActiveTab] = useState('all');
-  const [searchInput, setSearchInput] = useState('');
-  const [sortOption, setSortOption] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-const [darkMode, setDarkMode] = useState(() => {
-  const storedMode = localStorage.getItem('darkMode');
-  return storedMode === 'true'; // Convert string to boolean
-});
+  const [activeTab, setActiveTab] = useState(() => localStorage.getItem('activeTab') || 'all');
+  const [searchInput, setSearchInput] = useState(() => localStorage.getItem('searchInput') || '');
+  const [sortOption, setSortOption] = useState(() => localStorage.getItem('sortOption') || '');
+  const [selectedCategory, setSelectedCategory] = useState(() => localStorage.getItem('selectedCategory') || '');
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
+  const [favorites, setFavorites] = useState(() => {
+    const stored = localStorage.getItem('favorites');
+    return stored ? JSON.parse(stored) : [];
+  });
  
-useEffect(() => {
-  document.body.classList.toggle('dark', darkMode);
-  localStorage.setItem('darkMode', darkMode); // Save to localStorage
-}, [darkMode]);
+  // Persist settings
+  useEffect(() => {
+    document.body.classList.toggle('dark', darkMode);
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
  
-  const toggleDarkMode = () => {
-    setDarkMode((prev) => !prev);
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
+ 
+  useEffect(() => {
+    localStorage.setItem('searchInput', searchInput);
+  }, [searchInput]);
+ 
+  useEffect(() => {
+    localStorage.setItem('sortOption', sortOption);
+  }, [sortOption]);
+ 
+  useEffect(() => {
+    localStorage.setItem('selectedCategory', selectedCategory);
+  }, [selectedCategory]);
+ 
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
+ 
+  const toggleDarkMode = () => setDarkMode(prev => !prev);
+ 
+  const toggleFavorite = (courseId) => {
+    setFavorites(prev =>
+      prev.includes(courseId) ? prev.filter(id => id !== courseId) : [...prev, courseId]
+    );
   };
  
-  const allCategories = Array.from(
-    new Set(courseData.flatMap((course) => course.categories))
-  );
+  const allCategories = Array.from(new Set(courseData.flatMap(course => course.categories)));
  
-  const matchesSearch = (course, Input) => {
-    const q = Input.toLowerCase();
-    return (
-      course.title.toLowerCase().includes(q) ||
-      course.description.toLowerCase().includes(q)
-    );
+  const matchesSearch = (course, input) => {
+    const q = input.toLowerCase();
+    return course.title.toLowerCase().includes(q) || course.description.toLowerCase().includes(q);
   };
  
   const filteredCourses = () => {
@@ -42,23 +63,23 @@ useEffect(() => {
     let base = [...courseData];
  
     if (activeTab === 'beginner') {
-      base = base.filter((c) => c.level === 'Beginner');
+      base = base.filter(c => c.level === 'Beginner');
     } else if (activeTab === 'gemiddeld') {
-      base = base.filter((c) => c.level === 'Gemiddeld');
+      base = base.filter(c => c.level === 'Gemiddeld');
     } else if (activeTab === 'gevorderd') {
-      base = base.filter((c) => c.level === 'Gevorderd');
+      base = base.filter(c => c.level === 'Gevorderd');
     } else if (activeTab === 'populair') {
       base = base.sort((a, b) => b.views - a.views);
+    } else if (activeTab === 'favorieten') {
+      base = base.filter(course => favorites.includes(course.id));
     }
  
     if (searchInput.trim() !== '') {
-      base = base.filter((course) => matchesSearch(course, searchInput));
+      base = base.filter(course => matchesSearch(course, searchInput));
     }
  
     if (selectedCategory) {
-      base = base.filter((course) =>
-        course.categories.includes(selectedCategory)
-      );
+      base = base.filter(course => course.categories.includes(selectedCategory));
     }
  
     if (sortOption === 'rating') {
@@ -79,94 +100,81 @@ useEffect(() => {
   };
  
   return (
-<section className='dashboard'>
-<header className='dashboard-header'>
-<button className='dark-toggle' onClick={toggleDarkMode}>
+    <section className='dashboard'>
+      <header className='dashboard-header'>
+        <button className='dark-toggle' onClick={toggleDarkMode}>
           {darkMode ? 'Light Mode' : 'Dark Mode'}
-</button>
+        </button>
  
         <nav className='tab-buttons'>
-        <button
-  className={activeTab === 'all' ? 'active' : ''}
-  onClick={() => setActiveTab('all')}
->
-  Alle
-</button>
-<button
-  className={activeTab === 'beginner' ? 'active' : ''}
-  onClick={() => setActiveTab('beginner')}
->
-  Beginner
-</button>
-<button
-  className={activeTab === 'gemiddeld' ? 'active' : ''}
-  onClick={() => setActiveTab('gemiddeld')}
->
-  Gemiddeld
-</button>
-<button
-  className={activeTab === 'gevorderd' ? 'active' : ''}
-  onClick={() => setActiveTab('gevorderd')}
->
-  Gevorderd
-</button>
-<button
-  className={activeTab === 'populair' ? 'active' : ''}
-  onClick={() => setActiveTab('populair')}
->
-  Populair
-</button>
-</nav>
+          <button className={activeTab === 'all' ? 'active' : ''} onClick={() => setActiveTab('all')}>Alle</button>
+          <button className={activeTab === 'beginner' ? 'active' : ''} onClick={() => setActiveTab('beginner')}>Beginner</button>
+          <button className={activeTab === 'gemiddeld' ? 'active' : ''} onClick={() => setActiveTab('gemiddeld')}>Gemiddeld</button>
+          <button className={activeTab === 'gevorderd' ? 'active' : ''} onClick={() => setActiveTab('gevorderd')}>Gevorderd</button>
+          <button className={activeTab === 'populair' ? 'active' : ''} onClick={() => setActiveTab('populair')}>Populair</button>
+          <button className={activeTab === 'favorieten' ? 'active' : ''} onClick={() => setActiveTab('favorieten')}>Favorieten</button>
+        </nav>
  
         <SearchBar Input={searchInput} setInput={setSearchInput} />
  
         <div className='category-filter'>
-<label htmlFor='category'>Filter op categorie:</label>
-<select
+          <label htmlFor='category'>Filter op categorie:</label>
+          <select
             id='category'
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
->
-<option value=''>-- Alle categorieën --</option>
-            {allCategories.map((category) => (
-<option key={category} value={category}>
-                {category}
-</option>
+          >
+            <option value=''>-- Alle categorieën --</option>
+            {allCategories.map(category => (
+              <option key={category} value={category}>{category}</option>
             ))}
-</select>
-</div>
+          </select>
+        </div>
  
         <div className='sort-dropdown'>
-<label htmlFor='sort'>Sorteer op:</label>
-<select
+          <label htmlFor='sort'>Sorteer op:</label>
+          <select
             id='sort'
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
->
-<option value=''>-- Geen --</option>
-<option value='rating'>Rating</option>
-<option value='views'>Weergaven</option>
-<option value='members'>Leden</option>
-<option value='level'>Moeilijkheid</option>
-<option value='duration'>Duur</option>
-</select>
-</div>
-</header>
+          >
+            <option value=''>-- Geen --</option>
+            <option value='rating'>Rating</option>
+            <option value='views'>Weergaven</option>
+            <option value='members'>Leden</option>
+            <option value='level'>Moeilijkheid</option>
+            <option value='duration'>Duur</option>
+          </select>
+        </div>
+      </header>
  
       <div className='dashboard-content'>
-<section className='main-content'>
-<h2>
-            {/* Tab title logic */}
-</h2>
-<CourseList courses={filteredCourses()} />
-</section>
+        <section className='main-content'>
+          <h2>
+            {
+              {
+                all: 'Alle cursussen',
+                beginner: 'Beginner cursussen',
+                gemiddeld: 'Gemiddeld niveau',
+                gevorderd: 'Gevorderd niveau',
+                populair: 'Populaire cursussen',
+                favorieten: 'Je favorieten',
+              }[activeTab]
+            }
+          </h2>
+          <CourseList
+            courses={filteredCourses()}
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+          />
+        </section>
  
         <aside className='sidebar'>
-<PopularCourses courses={courseData} />
-<Statistics courses={courseData} />
-</aside>
-</div>
-</section>
+          <PopularCourses courses={courseData} />
+          <Statistics courses={courseData} />
+        </aside>
+      </div>
+    </section>
   );
 };
  
